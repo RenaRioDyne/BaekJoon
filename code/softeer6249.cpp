@@ -8,6 +8,8 @@ char nucleicAcid[30][30];
 
 int differentSuperSequence[30];
 
+int dp[(1<<16)+1];
+
 void makeDifferenceMasks(int N, int M){
     for(int n=0; n<N; n++){
         differentSuperSequence[n] = 0;
@@ -27,7 +29,8 @@ void makeDifferenceMasks(int N, int M){
 }
 
 int makeHyperNode(int cur, int toInvestigateMask){
-    return decideInclusion(cur, cur+1, toInvestigateMask & ~(1 << cur), differentSuperSequence[cur])+1;
+    if(dp[toInvestigateMask] < 0) dp[toInvestigateMask] =  decideInclusion(cur, cur+1, toInvestigateMask & ~(1 << cur), differentSuperSequence[cur])+1;
+    return dp[toInvestigateMask];
 }
 
 int decideInclusion(int cur, int next, int toInvestigateMask, int differentMask){ // recursion depth at most 150
@@ -65,6 +68,9 @@ int main(){
 
     makeDifferenceMasks(N, M);
 
+    for(int i=0; i<(1<<16)+1; i++){
+        dp[i] = -1;
+    }
 
     printf("%d\n", makeHyperNode(0, toInvestigateMask));
 }
