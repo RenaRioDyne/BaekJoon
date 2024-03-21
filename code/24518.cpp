@@ -18,43 +18,6 @@ long long int compute_period(int val, int period, int f){
                 * f) % DIV_CONST_LONG);
 }
 
-void runTest(int N, int M){
-    int sum = 0;
-    // int debug = 1;
-    for(int i=1; i<=N; i++){
-        sum += (N / i) * (i % M);
-        sum = sum % DIV_CONST_INT;
-        /*
-        if(i*i<N || (N/i != N/(i+1))){
-            if(debug < ref_arr_size && ref_arr2[debug] != i){
-                printf("index mismatch: should be sum until %d but summed until %d\n", i, ref_arr2[debug]);
-                //return;
-            }
-            
-            if(debug < ref_arr_size && ref_arr[debug] != sum){
-                printf("debug %d: sum should be %d but is %d\n",debug,sum,ref_arr[debug]);
-                printf("f, i: %d, %d\n", N/i,i);
-                printf("%d\n", ref_arr2[debug]);
-                //return;
-            }
-            debug++;
-        }
-        */
-    }
-    printf("actual answer: %d\n", sum);
-}
-
-
-int runIntermediateTest(int N, int M, int stop){
-    int sum = 0;
-    for(int i=1; i<=stop; i++){
-        sum += (N / i) * (i % M);
-        sum = sum % DIV_CONST_INT;
-    }
-    // printf("intermediate sum: %d\n", sum);
-    return sum;
-}
-
 int main(){
     int N, M;
     scanf("%d %d", &N, &M);
@@ -101,5 +64,4 @@ int main(){
     }
 
     printf("%lld\n", sum);
-    //runTest(N, M);
 }
