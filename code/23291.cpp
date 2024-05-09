@@ -18,14 +18,38 @@ FishBowl* rollFishBowls[MAX_ROLL][MAX_ROLL];
 FishBowl* sandFishBowls[MAX_BOWLS / 4][4];
 
 void printStatus(int numFishBowls){
+    for(int i=0; i<numFishBowls; i++){
+        printf("%d %d %d %d\n",
+        fishBowls[i].id,
+        fishBowls[i].numRollAdjacent,
+        fishBowls[i].numSandAdjacent,
+        fishBowls[i].numFish);
+    }
+    /*
     for(int i=0; i<MAX_ROLL; i++){
         for(int j=0; j<MAX_ROLL; j++){
             if(rollFishBowls[i][j] != NULL){
-                printf("%d %d %d %d %d %d\n", i, j, fishBowls[i].id, fishBowls[i].numRollAdjacent, fishBowls[i].numSandAdjacent, fishBowls[i].numFish);
+                printf("%d %d %d %d %d %d\n", i, j,
+                rollFishBowls[i][j]->id,
+                rollFishBowls[i][j]->numRollAdjacent,
+                rollFishBowls[i][j]->numSandAdjacent,
+                rollFishBowls[i][j]->numFish);
             }
         }
     }
+    */
     printf("end of status check\n");
+}
+
+void replenish(int numFishBowls){
+    int min = 11111;
+    for(int i=0; i<numFishBowls; i++){
+        if(min > fishBowls[i].numFish) min = fishBowls[i].numFish;
+    }
+
+    for(int i=0; i<numFishBowls; i++){
+        if(fishBowls[i].numFish == min) fishBowls[i].numFish++;
+    }
 }
 
 void reorderFromRoll(int numFishBowls){
@@ -36,16 +60,10 @@ void reorderFromRoll(int numFishBowls){
     M = N;
     if(numFishBowls >= N * (N+1)) M++;
 
-    for(int n=0; n<MAX_ROLL; n++){
-        for(int m=0; m<MAX_ROLL; m++){
-            rollFishBowls[n][m] = NULL;
-        }
-    }
-
     for(int i=0; i<N; i++){
         for(int j=0; j<M; j++){
-            if(rollFishBowls[i+1][j+1] != NULL){
-                printf("bad output in reorderFromRoll()");
+            if(rollFishBowls[i+1][j+1] == NULL){
+                printf("bad output in reorderFromRoll()\n");
             }
 
             fishBowls[i*M+j+MAX_BOWLS].numFish = rollFishBowls[i+1][j+1]->numFish;
@@ -77,6 +95,12 @@ void makeRoll(int numFishBowls){
     M = N;
     if(numFishBowls >= N * (N+1)) M++;
 
+    for(int n=0; n<MAX_ROLL; n++){
+        for(int m=0; m<MAX_ROLL; m++){
+            rollFishBowls[n][m] = NULL;
+        }
+    }
+
     FishBowl temp;
     FishBowl* tempptr = &temp;
 
@@ -84,7 +108,6 @@ void makeRoll(int numFishBowls){
         for(int j=0; j<M+2; j++){
             if(i>0 && j>0 && i < N+1 && j < M+1){
                 rollFishBowls[i][j] = tempptr;
-                printf("%d %d\n", i, j);
             } 
         }
     }
@@ -120,11 +143,10 @@ void makeRoll(int numFishBowls){
             n += ndiff;
             m += mdiff;
         }
-        if(rollFishBowls[n][m] != tempptr) printf("bug bug %d %d\n", n, m);
         rollFishBowls[n][m] = fishBowls + cur;
+        n += ndiff;
+        m += mdiff;
     }
-
-    printStatus(numFishBowls);
 
     for(int n = 1; n <= N; n++){
         for(int m = 1; m <= M; m++){
@@ -132,7 +154,7 @@ void makeRoll(int numFishBowls){
                 rollFishBowls[n][m]->rollAdjacent[rollFishBowls[n][m]->numRollAdjacent] = rollFishBowls[n+1][m];
                 rollFishBowls[n][m]->numRollAdjacent++;
             }
-            if(n != 0){
+            if(n != 1){
                 rollFishBowls[n][m]->rollAdjacent[rollFishBowls[n][m]->numRollAdjacent] = rollFishBowls[n-1][m];
                 rollFishBowls[n][m]->numRollAdjacent++;
             }
@@ -140,14 +162,12 @@ void makeRoll(int numFishBowls){
                 rollFishBowls[n][m]->rollAdjacent[rollFishBowls[n][m]->numRollAdjacent] = rollFishBowls[n][m+1];
                 rollFishBowls[n][m]->numRollAdjacent++;
             }
-            if(m != 0){
+            if(m != 1){
                 rollFishBowls[n][m]->rollAdjacent[rollFishBowls[n][m]->numRollAdjacent] = rollFishBowls[n][m-1];
                 rollFishBowls[n][m]->numRollAdjacent++;
             }
         }
     }
-
-    printf("hi\n");
 
     for(int cur = N * M; cur < numFishBowls; cur++){
         fishBowls[cur].rollAdjacent[fishBowls[cur].numRollAdjacent] = fishBowls + cur - 1;
@@ -165,15 +185,16 @@ void makeSand(int numFishBowls){
         cur++;
     }
     for(int i=0; i<numFishBowls / 4; i++){
-        sandFishBowls[i][3] = fishBowls + cur;
+        sandFishBowls[i][2] = fishBowls + cur;
         cur++;
     }
     for(int i=numFishBowls / 4 - 1; i >= 0; i--){
-        sandFishBowls[i][2] = fishBowls + cur;
+        sandFishBowls[i][3] = fishBowls + cur;
         cur++;
     }
     for(int i=0; i<numFishBowls / 4; i++){
         sandFishBowls[i][0] = fishBowls + cur;
+        cur++;
     }
     
     for(int i=0; i<numFishBowls; i++){
@@ -219,6 +240,12 @@ void propagate(int numFishBowls, bool forRoll){
                 int diff = fishBowls[i].numFish - fishBowls[i].sandAdjacent[j]->numFish;
                 fishBowls[i].diff -= diff / 5;
                 fishBowls[i].sandAdjacent[j]->diff += diff / 5;
+                /*
+                printf("%d from %d(%d) to %d(%d):\n", diff/5,
+                fishBowls[i].id, fishBowls[i].numFish,
+                fishBowls[i].sandAdjacent[j]->id,
+                fishBowls[i].sandAdjacent[j]->numFish);
+                */
             }
         }
     }
@@ -255,11 +282,17 @@ int main(){
     int numIters = 0;
 
     while(difference(N) > K){
+        replenish(N);
+        //printStatus(N);
         propagate(N,true);
         reorderFromRoll(N);
+        //printf("middle of iteration #%d\n", numIters);
+        //printStatus(N);
         propagate(N,false);
         reorderFromSandwich(N/4);
         numIters++;
+        //printf("iteration #%d done\n",numIters);
+        //printStatus(N);
     }
 
     printf("%d", numIters);
