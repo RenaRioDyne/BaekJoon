@@ -2,6 +2,8 @@
 
 [ ! -d "./compile" ] && mkdir compile
 
+rm *.stackdump
+
 problem=$1
 flag=$2
 input=$3
