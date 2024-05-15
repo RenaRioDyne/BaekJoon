@@ -2,6 +2,11 @@
 
 [ ! -d "./compile" ] && mkdir compile
 
+if [ -f "*.stackdump" ]
+then
+    rm "*.stackdump"
+fi
+
 problem=$1
 flag=$2
 input=$3
@@ -14,6 +19,7 @@ then
         exit 1
     fi
     mv "./code/$problem.cpp" "./archive/$problem.cpp"
+    exit
 fi
 
 if [ ! -f "./code/$problem.cpp" ]
@@ -26,8 +32,6 @@ then
     cp "./archive/$problem.cpp" "./code/$problem.cpp"
     copied=true
 fi
-
-echo "$copied"
 
 if [ "$flag" = "-c" ] 
 then
@@ -57,9 +61,4 @@ fi
 if [ "$copied" = true ]
 then
     rm "./code/$problem.cpp"
-fi
-
-if [ -f "*.stackdump" ]
-then
-    rm "*.stackdump"
 fi
