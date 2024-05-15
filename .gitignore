@@ -1,4 +1,5 @@
 input/
 compile/
 .vscode/
+archive/*.txt
 *.stackdump
