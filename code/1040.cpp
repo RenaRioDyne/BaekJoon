@@ -2,8 +2,8 @@
 #include <algorithm>
 
 const int DIGITS = 10;
-const int MAX_PLACES = 19;
-const unsigned long long MAX_VALUE = 1000000000023456789ull;
+const int MAX_PLACES = 20;
+const unsigned long long MAX_VALUE = 9999999999999999999ull;
 
 int K;
 
