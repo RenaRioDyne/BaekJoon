@@ -96,33 +96,35 @@ void setup(int N){
     }
 }
 
-class SegTree;
-class SegTreeNode;
+class SegTree{
+    std::vector<SegTreeNode> dynamic; // must push back new nodes here
+};
 
 class SegTreeNode{
 public:
     bool hasSubSegTree;
-    SegTree* subSegTree;
-    SegTree* container;
+    SegTree subSegTree;
+    SegTree* container; // for adding new nodes to the node pool
 
     int min, max, med;
     SegTreeNode* left;
     SegTreeNode* right;
 
-    Node* query(int min, int max, int min2, int max2){
-        
+    Nest* query(int qmin, int qmax, int qmin2, int qmax2){
+        if(min <= qmin && max >= qmax){
+            
+        }
     }
 
-    void update(Node* updated){
+    void update(Nest* updated){
         
     }
-}
+};
 
 class SegTree{
 public:
-    SegTreeNode* root; // "container" points to "this"
-    std::vector<SegTreeNode> dynamic; // must push back new nodes here
-}
+    SegTreeNode* root;
+};
 
 int main(){
     int N;
